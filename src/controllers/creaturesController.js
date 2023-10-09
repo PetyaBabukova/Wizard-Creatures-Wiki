@@ -1,3 +1,5 @@
+const User = require('../models/User')
+
 const router = require('express').Router();
 const creaturesManager = require('../managers/creaturesManager');
 
@@ -13,7 +15,7 @@ router.get('/', async (req, res) => {
 router.get('/create', (req, res) => {
     try {
         res.render('creatures/create');
-        
+
     } catch (error) {
         res.status(404).render('home', { error: 'Failed to get Add creature page.' });
     }
@@ -42,18 +44,26 @@ router.get('/:creatureId/details', async (req, res) => {
     try {
         const creatureId = req.params.creatureId;
         const creature = await creaturesManager.getOne(creatureId).lean();
+        
+        let count = creature.votes.length;
 
         if (!creature) {
             res.status(404).send("creature not found");
             return;
         }
 
-        let hasVoted = creature.votes.toString().includes(req.user?._id.toString());
+        let voted = [];
+        creature.votes.forEach(x => {
+            voted.push(x._id.toString());
+        });
+
+        let hasVoted = voted.includes(req.user?._id.toString());
+        let isAnyVote = creature.votes.length>0
         const isOwner = req.user?._id.toString() === creature.owner._id.toString();
         const isLogged = Boolean(req.user);
 
-        res.render('creatures/details', { ...creature, isOwner, isLogged, hasVoted });
-        
+        res.render('creatures/details', { ...creature, count, isOwner, isLogged, hasVoted, isAnyVote });
+
     } catch (error) {
         res.status(500).send('An error occurred while retrieving creature details.');
         console.log(error);
@@ -69,7 +79,7 @@ router.get('/:creatureId/edit', async (req, res) => {
         res.render('creatures/edit', { ...creature })
 
     } catch (error) {
-        res.render('home', {error: 'Edit creature Edit page failed'})
+        res.render('home', { error: 'Edit creature Edit page failed' })
     }
 });
 
@@ -115,7 +125,8 @@ router.get('/:creatureId/vote', async (req, res) => {
         } catch (err) {
 
             console.log(err);
-            res.render('creatures/details', {...creature,
+            res.render('creatures/details', {
+                ...creature,
                 error: 'You cannot vote',
                 isOwner,
                 isLogged,

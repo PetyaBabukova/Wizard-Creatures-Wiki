@@ -1,21 +1,45 @@
+        <main>
 
-        <main class="edit">
-            <!-- Edit Page (Only for logged-in users) -->
-            <section id="create">
-                <div class="form">
-                    <h2>Edit item</h2>
-                    <form class="create-form" method="post">
-                        <input type="text" name="name" id="name" placeholder="Name" value="{{name}}" />
-                        <input type="text" name="years" id="years" placeholder="Years" value="{{years}}" />
-                        <input type="text" name="kind" id="kind" placeholder="Kind" value="{{kind}}" />
-                        <input type="text" name="image" id="animal-img" placeholder="Image url" value="{{image}}" />
-                        <input type="text" name="needs" id="needs-of" placeholder="Needs of" value="{{need}}" />
-                        <input type="text" name="location" id="location" placeholder="Location" value="{{location}}" />
-                        <textarea id="description" placeholder="Description..."
-                            name="description">{{description}}</textarea>
+            <section id="edit-page">
+                <div class="editSection">
+                    <div class="info">
+                        <h2>"I've Always Wanted To Use That Spell."</h2>
+                    </div>
 
-                        <button type="submit">Edit</button>
+                    <form  method="post" class="editForm">
+                        <h2>Edit Post</h2>
+                        <ul class="noBullet">
+                            <li>
+                                <label for="title">Name:</label>
+                                <input type="text" class="inputFields" id="name" name="name" value="{{name}}" />
+                            </li>
+                            <li>
+                                <label for="key-word">Species:</label>
+                                <input type="text" class="inputFields" id="species" name="species" value="{{species}}" />
+                            </li>
+                            <li>
+                                <label for="location">Skin Colour:</label>
+                                <input type="text" class="inputFields" id="skin" name="skin" value="{{skin}}" />
+                            </li>
+                            <li>
+                                <label for="date">Eye Colour:</label>
+                                <input type="text" class="inputFields" id="eye" name="eye" value="{{eye}}" />
+                            </li>
+                            <li>
+                                <label for="image">Creature Image:</label>
+                                <input type="text" class="inputFields" id="image" name="image" value="{{image}}" />
+                            </li>
+                            <li>
+                                <label for="description">Description:</label>
+                                <textarea id="description" class="inputFields" name="description">{{description}}</textarea>
+                            </li>
+                            <li id="center-btn">
+                                <button id="edit-btn">Edit</button>
+                            </li>
+                        </ul>
                     </form>
+
                 </div>
             </section>
+
         </main>
