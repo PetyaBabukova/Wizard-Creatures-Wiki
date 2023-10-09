@@ -39,7 +39,7 @@ async function generateToken(user) {
     // Generate jwt
     const playload = {
         _id: user._id,
-        email: user.email
+        email: user.email,
     }
 
     const token = await jwt.sign(playload, SECRET, { expiresIn: '2d' });
