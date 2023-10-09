@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const homeController = require('./controllers/homeController');
 const userController = require('./controllers/userController');
-const animalsController = require('./controllers/animalsController');
+const creaturesController = require('./controllers/creaturesController');
 
 router.use(homeController);
 router.use( '/users', userController);
-router.use( '/animals', animalsController);
+router.use( '/creatures', creaturesController);
 
 
 router.get('*', (req, res)=>{

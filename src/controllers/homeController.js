@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const animalsManager = require('../managers/animalsManager')
+const creaturesManager = require('../managers/creaturesManager')
 
 router.get('/', async (req, res) => {
 
-    await animalsManager.getAll()
+    await creaturesManager.getAll()
         .then((animals) => {
 
             
