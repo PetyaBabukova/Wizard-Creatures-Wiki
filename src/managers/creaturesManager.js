@@ -11,11 +11,11 @@ exports.edit = (creatureId, creatureData) => Creature.findByIdAndUpdate(creature
 
 exports.delete = (creatureId,) => Creature.findByIdAndDelete(creatureId);
 
-exports.donate = async (creatureId, userId) => {
+exports.vote = async (creatureId, userId) => {
     const creature = await Creature.findById(creatureId);
 
-    if (!creature.donations.includes(userId.toString())) {
-        creature.donations.push(userId);
+    if (!creature.votes.includes(userId.toString())) {
+        creature.votes.push(userId);
         await creature.save();
     }
     return creature;

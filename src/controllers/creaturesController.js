@@ -1,22 +1,10 @@
 const router = require('express').Router();
-// const { getErrorMessage } = require('../utils/errorHelpers');
 const creaturesManager = require('../managers/creaturesManager');
-
-// router.get('/', async (req, res) => {
-
-//     await creaturesManager.getAll()
-//         .then((creatures) => {
-//             res.render('creatures/dashboard', { creatures });
-
-//         }).catch(err => {
-//             res.status(404).render('home/404', { error: 'Failed to fetch creatures.' });
-//         });
-// });
 
 router.get('/', async (req, res) => {
     try {
         const creatures = await creaturesManager.getAll();
-        res.render('creatures/dashboard', { creatures });
+        res.render('creatures', { creatures });
     } catch (error) {
         res.status(404).render('home', { error: 'Failed to fetch creatures.' });
     }
@@ -50,22 +38,6 @@ router.post('/create', async (req, res) => {
     }
 });
 
-// router.get('/:creatureId/details', async (req, res) => {
-//     const creatureId = req.params.creatureId;
-//     const creature = await creaturesManager.getOne(creatureId).lean();
-
-//     if (!creature) {
-//         res.status(404).send("creature not found");
-//         return;
-//     };
-
-//     let hasDonate = creature.donations.toString().includes(req.user?._id.toString());
-//     const isOwner = req.user?._id.toString() === creature.owner._id.toString();
-//     const isLogged = Boolean(req.user);
-
-//     res.render('creatures/details', { ...creature, isOwner, isLogged, hasDonate });
-// });
-
 router.get('/:creatureId/details', async (req, res) => {
     try {
         const creatureId = req.params.creatureId;
@@ -76,14 +48,15 @@ router.get('/:creatureId/details', async (req, res) => {
             return;
         }
 
-        let hasDonate = creature.donations.toString().includes(req.user?._id.toString());
+        let hasVoted = creature.votes.toString().includes(req.user?._id.toString());
         const isOwner = req.user?._id.toString() === creature.owner._id.toString();
         const isLogged = Boolean(req.user);
 
-        res.render('creatures/details', { ...creature, isOwner, isLogged, hasDonate });
+        res.render('creatures/details', { ...creature, isOwner, isLogged, hasVoted });
         
     } catch (error) {
         res.status(500).send('An error occurred while retrieving creature details.');
+        console.log(error);
     }
 });
 
@@ -126,7 +99,7 @@ router.get('/:creatureId/delete', async (req, res) => {
 
 })
 
-router.get('/:creatureId/donate', async (req, res) => {
+router.get('/:creatureId/vote', async (req, res) => {
     const creatureId = req.params.creatureId;
     const user = req.user;
     const creature = await creaturesManager.getOne(creatureId).lean();
@@ -137,53 +110,20 @@ router.get('/:creatureId/donate', async (req, res) => {
 
     if (isLogged && !isOwner) {
         try {
-            await creaturesManager.donate(creatureId, user._id);
+            await creaturesManager.vote(creatureId, user._id);
             res.redirect(`/creatures/${creatureId}/details`);
         } catch (err) {
 
             console.log(err);
-            // res.render('creatures/details', {...creature,
-            //     error: 'You cannot donate',
-            //     isOwner,
-            //     isLogged,
-            // });
+            res.render('creatures/details', {...creature,
+                error: 'You cannot vote',
+                isOwner,
+                isLogged,
+            });
         }
     } else {
         res.redirect(`/creatures/${creatureId}/details`);
     }
 });
-
-// router.get('/search', async (req, res) => {
-//     creaturesManager.getAll()
-//         .then((creatures) => {
-//             res.render('creatures/search', { creatures })
-//         })
-
-// });
-
-router.get('/search', async (req, res) => {
-    try {
-        const creatures = await creaturesManager.getAll();
-        res.render('creatures/search', { creatures });
-    } catch (error) {
-        res.status(500).send('An error occurred while searching for creatures.');
-    }
-});
-
-
-
-
-router.post('/search', async (req, res) => {
-
-    creaturesManager.search(req.body.search)
-        .then((creatures) => {
-            res.render('creatures/search', { creatures })
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).render('home', { error: 'Failed to search creatures.' });
-        })
-});
-
 
 module.exports = router;

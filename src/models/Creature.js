@@ -13,13 +13,13 @@ const CreatureSchema = new mongoose.Schema({
         // minlength: 2,
     },
 
-    skinColor: {
+    skin: {
         type: String,
         required: [true, 'You need to specify the colcr of the skin'],
         // minlength: 2,
     },
 
-    eyeColor: {
+    eye: {
         type: String,
         required: [true, 'You need to specify the colcr of the eyes'],
         // minlength: 2,
