@@ -89,7 +89,7 @@ router.post('/:creatureId/edit', async (req, res) => {
 
     try {
         const creature = await creaturesManager.edit(creatureId, creatureData);
-        res.redirect('/creatures');
+        res.redirect(`/creatures/${creatureId}/details`);
     } catch (error) {
         res.render('creatures/edit', { error: 'Unable to update creature', ...creatureData })
     }

@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const userManager = require('../managers/userManager');
+const creaturesManager = require('../managers/creaturesManager');
 const { TOKEN_KEY } = require('../config/config');
 const { getErrorMessage } = require('../utils/errorHelpers');
+const Creature = require('../models/Creature')
 
 
 router.get('/login', (req, res) => {
@@ -49,9 +51,21 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
+router.get('/profile', async (req, res) =>{
+
+    await creaturesManager.getAllOwnCreatures(req.user._id)
+    .then(ownCreatures => {
+
+        res.render('users/profile', { ownCreatures: ownCreatures });
+    })
+    .catch(err => console.log(err));
+
+        
+    
+})
 
 
-// Login with an email:
+
 
 
 

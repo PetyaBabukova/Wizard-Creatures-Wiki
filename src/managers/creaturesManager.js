@@ -1,9 +1,8 @@
 const Creature = require('../models/Creature');
-const { login } = require('./userManager');
 
 exports.create = (creatureData) => Creature.create(creatureData);
 
-exports.getAll = () => Creature.find().lean();
+exports.getAll = () => Creature.find().lean().populate('owner');
 
 exports.getOne = (creatureId) => Creature.findById(creatureId).populate('owner').populate('votes');
 
@@ -19,4 +18,9 @@ exports.vote = async (creatureId, userId) => {
         await creature.save();
     }
     return creature;
+};
+
+exports.getAllOwnCreatures = async (userId) => {
+    const ownCreatures = await Creature.find({owner: userId}).populate('owner').lean();
+    return ownCreatures;
 };
